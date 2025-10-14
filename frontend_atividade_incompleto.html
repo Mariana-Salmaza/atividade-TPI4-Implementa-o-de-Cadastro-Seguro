@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trabalho - Upload Múltiplo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        /* Palette: #4525D2, #341CBE, #2212AA, #110996, #000082 */
+        background: linear-gradient(135deg, #4525d2 0%, #2212aa 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/><circle cx="10" cy="60" r="0.5" fill="white" opacity="0.1"/><circle cx="90" cy="40" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        pointer-events: none;
+      }
+
+      .container {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25),
+          0 0 0 1px rgba(255, 255, 255, 0.2);
+        max-width: 650px;
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      .container::before {
+        content: "";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(
+          45deg,
+          #4525d2,
+          #341cbe,
+          #2212aa,
+          #110996,
+          #000082
+        );
+        border-radius: 22px;
+        z-index: -1;
+        opacity: 0.3;
+        filter: blur(1px);
+      }
+
+      h1 {
+        font-size: 2.2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #341cbe, #110996);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 15px;
+        text-align: center;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        font-size: 1.1rem;
+        color: #6b7280;
+        margin-bottom: 30px;
+        text-align: center;
+        font-weight: 400;
+        line-height: 1.6;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+        position: relative;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 12px;
+        font-size: 1.1rem;
+      }
+
+      input[type="file"] {
+        border: 3px dashed rgba(0, 0, 0, 0.08);
+        padding: 20px;
+        border-radius: 15px;
+        width: 100%;
+        transition: all 0.3s ease;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.98),
+          rgba(250, 250, 255, 0.96)
+        );
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      input[type="file"]:hover {
+        border-color: #341cbe;
+        background: linear-gradient(
+          135deg,
+          rgba(235, 230, 255, 0.95),
+          rgba(225, 220, 255, 0.95)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(52, 28, 190, 0.12);
+      }
+
+      input[type="file"]:focus {
+        outline: none;
+        border-color: #2212aa;
+        box-shadow: 0 0 0 4px rgba(34, 18, 170, 0.08);
+      }
+
+      button {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #341cbe, #110996);
+        color: white;
+        font-weight: 600;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+        font-size: 1.1rem;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      button:hover::before {
+        left: 100%;
+      }
+
+      button:hover:not(:disabled) {
+        background: linear-gradient(135deg, #4525d2, #000082);
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(34, 18, 170, 0.32);
+      }
+
+      button:active:not(:disabled) {
+        transform: translateY(-1px);
+      }
+
+      button:disabled {
+        background: linear-gradient(135deg, #cbd5e0, #a0aec0);
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+      }
+
+      .message-box {
+        margin-top: 25px;
+        padding: 20px;
+        border-radius: 15px;
+        font-weight: 500;
+        display: none;
+        animation: slideIn 0.3s ease-out;
+        border-left: 5px solid;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .message-box.success {
+        background: linear-gradient(135deg, #e9f7ff, #eef2ff);
+        color: #062c4a;
+        border-left-color: #341cbe;
+        box-shadow: 0 4px 15px rgba(52, 28, 190, 0.12);
+      }
+
+      .message-box.error {
+        background: linear-gradient(135deg, #fff1f2, #fff5f7);
+        color: #4a1220;
+        border-left-color: #2212aa;
+        box-shadow: 0 4px 15px rgba(34, 18, 170, 0.08);
+      }
+
+      .message-box.alert {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+        border-left-color: #f59e0b;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      }
+
+      .upload-icon {
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 25px;
+          margin: 10px;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+
+        button {
+          padding: 14px;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>📁 Upload Múltiplo de Imagens</h1>
+      <p class="subtitle">
+        Selecione até 10 imagens (PNG/JPEG) com tamanho máximo de 5MB cada para
+        fazer o upload.
+      </p>
+
+      <div class="form-group">
+        <label for="arquivoInput">
+          <span class="upload-icon">📎</span>
+          Selecione suas imagens:
+        </label>
+        <!-- OBRIGATÓRIO: Habilitar a seleção múltipla e definir o campo 'meusArquivos' -->
+        <input
+          type="file"
+          id="arquivoInput"
+          name="meusArquivos"
+          multiple
+          accept="image/png, image/jpeg"
+        />
+      </div>
+
+      <button type="button" id="enviarBtn">
+        <span class="upload-icon">🚀</span>
+        Enviar Arquivos
+      </button>
+
+      <div id="messageBox" class="message-box"></div>
+    </div>
+
+    <script>
+      const enviarBtn = document.getElementById("enviarBtn");
+      const messageBox = document.getElementById("messageBox");
+      const arquivoInput = document.getElementById("arquivoInput");
+      const STORAGE_KEY = "uploadMensagemPersistida";
+      let hideTimeoutId = null;
+
+      // Adiciona o listener ao botão
+      enviarBtn.addEventListener("click", function (event) {
+        event.preventDefault();
+        enviarArquivos();
+      });
+
+      function exibirMensagem(mensagem, tipo, tempo = 12000) {
+        const icones = {
+          success: "✅",
+          error: "❌",
+          alert: "⚠️",
+        };
+
+        messageBox.innerHTML = `<span class="upload-icon">${icones[tipo]}</span>${mensagem}`;
+        messageBox.className = `message-box ${tipo}`;
+        messageBox.style.display = "block";
+
+        // Persistir mensagem para sobreviver a reloads do Live Server
+        const expiresAt = tempo > 0 ? Date.now() + tempo : 0;
+        try {
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({ mensagem, tipo, expiresAt })
+          );
+        } catch {}
+
+        if (hideTimeoutId) clearTimeout(hideTimeoutId);
+        if (tempo > 0) {
+          hideTimeoutId = setTimeout(() => {
+            messageBox.style.display = "none";
+            try {
+              localStorage.removeItem(STORAGE_KEY);
+            } catch {}
+          }, tempo);
+        }
+      }
+
+      function limparMensagem() {
+        messageBox.textContent = "";
+        messageBox.className = "message-box";
+        messageBox.style.display = "none";
+        if (hideTimeoutId) clearTimeout(hideTimeoutId);
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {}
+      }
+      function restaurarMensagemPersistida() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const { mensagem, tipo, expiresAt } = JSON.parse(raw);
+          const restante = expiresAt ? expiresAt - Date.now() : 0;
+          if (expiresAt === 0) {
+            exibirMensagem(mensagem, tipo, 12000);
+          } else if (restante > 500) {
+            exibirMensagem(mensagem, tipo, restante);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
+        } catch {}
+      }
+
+      // Restaura se houver reload do Live Server
+      restaurarMensagemPersistida();
+
+      // --- FUNÇÃO PRINCIPAL (A SER IMPLEMENTADA) ---
+
+      async function enviarArquivos() {
+        limparMensagem();
+        enviarBtn.disabled = true;
+        enviarBtn.textContent = "Enviando...";
+
+        try {
+          const arquivos = arquivoInput.files;
+
+          if (arquivos.length === 0) {
+            exibirMensagem("Nenhum arquivo selecionado.", "alert");
+            enviarBtn.disabled = false;
+            enviarBtn.textContent = "Enviar Arquivos";
+            return;
+          }
+          if (arquivos.length > 10) {
+            exibirMensagem(
+              `Você selecionou ${arquivos.length} arquivos. O máximo permitido é 10.`,
+              "alert"
+            );
+            enviarBtn.disabled = false;
+            enviarBtn.textContent = "Enviar Arquivos";
+            return;
+          }
+
+          // Valida tamanho máximo de 5MB
+          if (
+            Array.from(arquivos).some((file) => file.size > 5 * 1024 * 1024)
+          ) {
+            exibirMensagem(
+              "Um ou mais arquivos excedem o tamanho máximo de 5MB.",
+              "alert"
+            );
+            enviarBtn.disabled = false;
+            enviarBtn.textContent = "Enviar Arquivos";
+            return;
+          }
+
+          // ----------------------------------------------------
+          //  IMPLEMENTAÇÃO NECESSÁRIA PELO ALUNO:
+          //
+          // 2. CRIAR O OBJETO FormData
+          // 3. FAZER O LOOP (for...of)
+          // 4. USAR formData.append('meusArquivos', arquivoAtual)
+          // 5. EXECUTAR O FETCH
+          // 6. TRATAR response.ok e response.json()
+          // ----------------------------------------------------
+
+          const formData = new FormData();
+          for (const arquivo of arquivos) {
+            formData.append("meusArquivos", arquivo);
+          }
+
+          const response = await fetch("http://localhost:3000/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const resultado = await response.json().catch(() => ({}));
+
+          if (response.ok) {
+            const msg =
+              resultado.mensagem ||
+              resultado.message ||
+              "Arquivos enviados com sucesso!";
+            exibirMensagem(msg, "success");
+            arquivoInput.value = "";
+          } else {
+            const erroMsg =
+              resultado.erro ||
+              resultado.messagem ||
+              resultado.message ||
+              "Falha no upload. Verifique os arquivos.";
+            exibirMensagem(erroMsg, "error");
+          }
+        } catch (error) {
+          console.error("Erro de requisição:", error);
+          exibirMensagem(
+            "Erro de conexão com o servidor. Verifique o console.",
+            "error"
+          );
+        } finally {
+          enviarBtn.disabled = false;
+          enviarBtn.textContent = "Enviar Arquivos";
+        }
+      }
+    </script>
+  </body>
+</html>
