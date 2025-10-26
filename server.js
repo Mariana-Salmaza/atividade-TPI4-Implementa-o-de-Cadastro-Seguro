@@ -5,8 +5,18 @@ const path = require("path");
 const multer = require("multer");
 const fs = require("fs");
 const cors = require("cors");
+const userModel = require("./model/userModel");
+const hashPasswordAsync = require("./Bcrypt/hashPassword");
+
+let bcrypt;
+try {
+  bcrypt = require("bcrypt");
+} catch (err) {
+  bcrypt = require("bcryptjs");
+}
 
 app.use(cors());
+app.use(express.json());
 
 const createUploadDirectory = (dir) => {
   if (!fs.existsSync(dir)) {
@@ -74,6 +84,43 @@ app.post("/upload", (req, res) => {
       console.log(arquivos);
     }
   );
+});
+
+app.post("/hash-teste", async (req, res) => {
+  const senha = req.body && req.body.senha;
+  const saltRounds = 10;
+
+  if (!senha) {
+    return res
+      .status(400)
+      .json({ error: 'Campo "senha" é obrigatório no corpo (JSON).' });
+  }
+
+  try {
+    const hashSenha = await hashPasswordAsync(senha, saltRounds);
+    res.status(200).json({ hash: hashSenha });
+  } catch (err) {
+    res.status(500).json({ error: "Erro ao gerar hash", details: err.message });
+  }
+});
+
+app.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+  console.log(username, email, password);
+  if (userModel.findByUsername(username)) {
+    return res.status(400).json({ error: "Usuario já existe." });
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(password, salt);
+
+  const newUser = userModel.addUser({ username, email, passwordHash });
+  console.log(newUser);
+
+  res.status(201).json({
+    mensagem: "Usuário criado com sucesso.",
+    user: { id: newUser.id, username: newUser.username },
+  });
 });
 
 app.listen(port, () => {

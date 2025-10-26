@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cadastro - Atividade</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg1: #0f172a;
+        --accent1: #7c3aed;
+        --accent2: #06b6d4;
+        --card: #f8fafc;
+        --muted: #64748b;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: Poppins, system-ui, Arial;
+        background: linear-gradient(135deg, var(--bg1), #0b1220 60%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+      .wrap {
+        width: 100%;
+        max-width: 980px;
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 30px;
+      }
+      .hero {
+        padding: 36px;
+        border-radius: 18px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          transparent
+        );
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+      .hero h1 {
+        font-size: 2.1rem;
+        margin-bottom: 8px;
+      }
+      .hero p {
+        color: var(--muted);
+        margin-bottom: 18px;
+      }
+
+      .card {
+        background: var(--card);
+        color: #071229;
+        padding: 28px;
+        border-radius: 14px;
+        box-shadow: 0 10px 40px rgba(2, 6, 23, 0.6);
+        border: 1px solid rgba(12, 18, 40, 0.06);
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #e6eef6;
+        font-size: 1rem;
+        background: linear-gradient(180deg, #ffffff, #fbfdff);
+      }
+      .small {
+        font-size: 0.85rem;
+        color: #475569;
+        margin-top: 6px;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+      }
+      .btn {
+        display: inline-block;
+        padding: 12px 18px;
+        border-radius: 12px;
+        color: white;
+        background: linear-gradient(90deg, var(--accent1), #4f46e5);
+        border: none;
+        font-weight: 700;
+        cursor: pointer;
+        width: 100%;
+        font-size: 1rem;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .or {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #9aa9c3;
+        margin: 14px 0;
+      }
+      .or::before,
+      .or::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #e6eef6, transparent);
+      }
+      .msg {
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 14px;
+        display: none;
+      }
+      .msg.success {
+        background: linear-gradient(90deg, #ecfeff, #f0f9ff);
+        color: #0b3948;
+        border: 1px solid #bfeceb;
+      }
+      .msg.error {
+        background: linear-gradient(90deg, #fff1f2, #fff7f7);
+        color: #4a1220;
+        border: 1px solid #f7c6cc;
+      }
+
+      @media (max-width: 880px) {
+        .wrap {
+          grid-template-columns: 1fr;
+        }
+        .hero {
+          order: 2;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="hero">
+        <h1>Crie sua conta</h1>
+        <p>
+          Cadastro rápido para testar a API localmente. Seus dados ficam apenas
+          em memória (apagam ao reiniciar o servidor).
+        </p>
+        <div
+          style="
+            margin-top: 18px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+          "
+        >
+          <div
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 12px;
+              background: linear-gradient(
+                135deg,
+                var(--accent1),
+                var(--accent2)
+              );
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 700;
+              color: white;
+            "
+          >
+            G
+          </div>
+          <div>
+            <div style="font-weight: 700">Gabriel H</div>
+            <div style="font-size: 0.85rem; color: var(--muted)">
+              Aluno - TADS
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <form id="registerForm" class="card" onsubmit="return false">
+        <h2 style="margin: 0 0 8px 0">Registro</h2>
+        <p class="small">
+          Preencha os dados abaixo para criar uma conta de teste.
+        </p>
+
+        <div class="field">
+          <label for="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="seu_usuario"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="voce@exemplo.com"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Senha</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Senha forte"
+            required
+          />
+          <div class="small">
+            Use pelo menos 8 caracteres. Não envie senhas reais em ambientes
+            públicos.
+          </div>
+        </div>
+
+        <button id="submitBtn" class="btn" type="submit">Criar Conta</button>
+
+        <div id="message" class="msg"></div>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("registerForm");
+      const message = document.getElementById("message");
+      const btn = document.getElementById("submitBtn");
+
+      function show(type, text) {
+        message.className = "msg " + (type === "ok" ? "success" : "error");
+        message.textContent = text;
+        message.style.display = "block";
+      }
+
+      form.addEventListener("submit", async () => {
+        message.style.display = "none";
+        btn.disabled = true;
+        btn.textContent = "Enviando...";
+
+        const payload = {
+          username: document.getElementById("username").value.trim(),
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+        };
+
+        try {
+          const res = await fetch("http://localhost:3000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok) {
+            show("ok", data.mensagem || "Conta criada com sucesso!");
+            form.reset();
+          } else {
+            show("err", data.error || data.mensagem || "Falha ao criar conta");
+          }
+        } catch (e) {
+          show("err", "Erro de conexão: " + (e.message || e));
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "Criar Conta";
+        }
+      });
+    </script>
+  </body>
+</html>
